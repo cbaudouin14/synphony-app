@@ -6,7 +6,7 @@
 {% block body %}
 	<div class="container d-flex justify-content-center">
 		<div style="max-width: 400px; width: 100%;">
-			<h1 class="text-success">Register</h1>
+			<h1 class="text-success">Créer un compte</h1>
 
 			<div class="p-2" style="max-width: 400px; margin: 0 auto;">
 				{{ form_errors(registrationForm) }}
@@ -28,7 +28,7 @@
 
 				<div class="form-check mb-3">
 					{{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
-					{{ form_label(registrationForm.agreeTerms, null, {'label_attr': {'class': 'form-check-label'}}) }}
+					{{ form_label(registrationForm.agreeTerms, 'Accepter les conditions', {'label_attr': {'class': 'form-check-label'}}) }}
 					{{ form_errors(registrationForm.agreeTerms) }}
 				</div>
 
