@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ReservationRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
@@ -13,13 +14,16 @@ class Reservation
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTime $startDate = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTime $endDate = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTime $expectedEndDate = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTime $effectiveEndDate = null;
 
     #[ORM\Column]
@@ -42,6 +46,18 @@ class Reservation
         return $this;
     }
 
+    public function getEndDate(): ?\DateTime
+    {
+        return $this->endDate;
+    }
+
+    public function setEndDate(\DateTime $endDate): static
+    {
+        $this->endDate = $endDate;
+
+        return $this;
+    }
+
     public function getExpectedEndDate(): ?\DateTime
     {
         return $this->expectedEndDate;
@@ -59,7 +75,7 @@ class Reservation
         return $this->effectiveEndDate;
     }
 
-    public function setEffectiveEndDate(?\DateTime $effectiveEndDate): static
+    public function setEffectiveEndDate(\DateTime $effectiveEndDate): static
     {
         $this->effectiveEndDate = $effectiveEndDate;
 

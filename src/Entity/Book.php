@@ -20,6 +20,9 @@ class Book
     private ?string $author = null;
 
     #[ORM\Column]
+    private ?int $stock = null;
+
+    #[ORM\Column]
     private ?bool $available = null;
 
     public function getId(): ?int
@@ -47,6 +50,18 @@ class Book
     public function setAuthor(string $author): static
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    public function getStock(): ?int
+    {
+        return $this->stock;
+    }
+
+    public function setStock(int $stock): static
+    {
+        $this->stock = $stock;
 
         return $this;
     }
