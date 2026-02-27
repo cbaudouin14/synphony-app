@@ -4,45 +4,47 @@
 {% endblock %}
 
 {% block body %}
-	<div class="text-center p-4">
-		<h1 class="text-success">Connexion</h1>
-		<form method="post">
-			{% if error %}
-				<div>
-					{{ error.messageKey|trans(error.messageData, 'security') }}
-				</div>
-			{% endif %}
 
-			{% if app.user %}
-				<div>
-					Vous êtes connecté en tant que
-					{{ app.user.userIdentifier }}.
-					<a href="{{ logout_path() }}">Se déconnecter</a>
-				</div>
-			{% endif %}
-			<div class="p-2" style="max-width: 400px; margin: 0 auto;">
-				<div class="mb-3 text-start">
-					<label for="username" class="form-label">Email</label>
-					<input type="email" class="form-control" id="username" name="_username" style="width:350px" value="{{ last_username }}" required autofocus>
-				</div>
+	<div class="container d-flex justify-content-center">
+		<div style="max-width: 400px; width: 100%;">
+			<h1 class="text-success">Connexion</h1>
+			<form method="post">
+				{% if error %}
+					<div>
+						{{ error.messageKey|trans(error.messageData, 'security') }}
+					</div>
+				{% endif %}
 
-				<div class="mb-3 text-start">
-					<label for="password" class="form-label">Mot de passe</label>
-					<input type="password" class="form-control" id="password" name="_password" style="width:350px" required>
+				{% if app.user %}
+					<div>
+						Vous êtes connecté en tant que
+						{{ app.user.userIdentifier }}.
+						<a href="{{ logout_path() }}">Se déconnecter</a>
+					</div>
+				{% endif %}
+				<div class="p-2" style="max-width: 400px; margin: 0 auto;">
+					<div class="mb-3 text-start">
+						<label for="username" class="form-label">Email</label>
+						<input type="email" class="form-control" id="username" name="_username" style="width:350px" value="{{ last_username }}" required autofocus>
+					</div>
+
+					<div class="mb-3 text-start">
+						<label for="password" class="form-label">Mot de passe</label>
+						<input type="password" class="form-control" id="password" name="_password" style="width:350px" required>
+					</div>
+
+					<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+					<button type="submit" class="btn btn-success">Se connecter</button>
 				</div>
+			</form>
 
-				<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+			<hr>
 
-				<button type="submit" class="btn btn-success">Se connecter</button>
+			<div>
+				<p>Pas encore de compte ?
+					<a href="{{ path('app_register') }}" class="text-success">Créer un compte</a>
+				</p>
 			</div>
-		</form>
-
-		<hr>
-
-		<div>
-			<p>Pas encore de compte ?
-				<a href="{{ path('app_register') }}" class="text-success">Créer un compte</a>
-			</p>
 		</div>
-	</div>
-{% endblock %}
+	{% endblock %}
