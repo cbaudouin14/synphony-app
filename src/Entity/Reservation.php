@@ -37,16 +37,13 @@ class Reservation
     #[ORM\ManyToMany(targetEntity: Book::class, inversedBy: 'reservations')]
     private Collection $book;
 
-    /**
-     * @var Collection<int, User>
-     */
-    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'reservation')]
-    private Collection $User;
+    #[ORM\ManyToOne(inversedBy: 'reservations')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     public function __construct()
     {
         $this->book = new ArrayCollection();
-        $this->User = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -163,33 +160,44 @@ class Reservation
         return $this;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUser(): Collection
+    public function getUser(): ?User
     {
-        return $this->User;
+        return $this->user;
     }
 
-    public function addUser(User $user): static
+    public function setUser(?User $user): static
     {
-        if (!$this->User->contains($user)) {
-            $this->User->add($user);
-            $user->setReservation($this);
-        }
-
+        $this->user = $user;
         return $this;
     }
 
-    public function removeUser(User $user): static
-    {
-        if ($this->User->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getReservation() === $this) {
-                $user->setReservation(null);
-            }
-        }
+    // /**
+    //  * @return Collection<int, User>
+    //  */
+    // public function getUser(): Collection
+    // {
+    //     return $this->User;
+    // }
 
-        return $this;
-    }
+    // public function addUser(User $user): static
+    // {
+    //     if (!$this->User->contains($user)) {
+    //         $this->User->add($user);
+    //         $user->setReservation($this);
+    //     }
+
+    //     return $this;
+    // }
+
+    // public function removeUser(User $user): static
+    // {
+    //     if ($this->User->removeElement($user)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($user->getReservation() === $this) {
+    //             $user->setReservation(null);
+    //         }
+    //     }
+
+    //     return $this;
+    // }
 }
