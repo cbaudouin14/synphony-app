@@ -99,11 +99,6 @@ class Book
     {
         if (!$this->reservations->contains($reservation)) {
             $this->reservations->add($reservation);
-            $reservation->addBook($this);
-
-            if ($this->stock > 0) {
-                $this->setStock($this->stock - 1);
-            }
         }
 
         return $this;

@@ -140,7 +140,12 @@ class Reservation
         if (!$this->book->contains($book)) {
             if ($book->isAvailable()) {
                 $this->book->add($book);
-                $book->addReservation($this);
+
+                $book->getReservations()->add($this);
+
+                $book->setStock($book->getStock() - 1);
+
+
             } else {
                 throw new \Exception("Le livre '{$book->getTitle()}' n'est pas disponible.");
             }
