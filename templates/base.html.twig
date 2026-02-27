@@ -24,10 +24,10 @@
 						<ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
 							{% if app.user %}
 								<li class="nav-item">
-									<a class="nav-link" href="">Livres</a>
+									<a class="nav-link" href="{{ path('app_book_index') }}">Livres</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link" href="">Mes réservations</a>
+									<a class="nav-link" href="{{ path('app_reservation_index') }}">Mes réservations</a>
 								</li>
 								{% if is_granted('ROLE_ADMIN') %}
 									<li class="nav-item">
