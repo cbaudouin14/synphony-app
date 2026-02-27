@@ -62,7 +62,7 @@ class Reservation
     public function setStartDate(\DateTime $startDate): static
     {
         $this->startDate = $startDate;
-
+        $this->updateActiveStatus();
         return $this;
     }
 
@@ -74,7 +74,7 @@ class Reservation
     public function setEndDate(\DateTime $endDate): static
     {
         $this->endDate = $endDate;
-
+        $this->updateActiveStatus();
         return $this;
     }
 
@@ -102,6 +102,19 @@ class Reservation
         return $this;
     }
 
+    public function updateActiveStatus(): static
+    {
+        $now = new \DateTime();
+
+        if ($this->startDate && $this->endDate) {
+            $this->active = ($this->startDate <= $now) && ($this->endDate >= $now);
+        } else {
+            $this->active = false;
+        }
+
+        return $this;
+    }
+
     public function isActive(): ?bool
     {
         return $this->active;
@@ -125,7 +138,12 @@ class Reservation
     public function addBook(Book $book): static
     {
         if (!$this->book->contains($book)) {
-            $this->book->add($book);
+            if ($book->isAvailable()) {
+                $this->book->add($book);
+                $book->addReservation($this);
+            } else {
+                throw new \Exception("Le livre '{$book->getTitle()}' n'est pas disponible.");
+            }
         }
 
         return $this;
@@ -133,7 +151,9 @@ class Reservation
 
     public function removeBook(Book $book): static
     {
-        $this->book->removeElement($book);
+        if ($this->book->removeElement($book)) {
+            $book->removeReservation($this);
+        }
 
         return $this;
     }
