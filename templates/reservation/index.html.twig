@@ -3,43 +3,55 @@
 {% block title %}Liste des réservations{% endblock %}
 
 {% block body %}
-    <h1>Liste des réservations</h1>
+<div class="container mt-4">
+    <h1 class="mb-4">Liste des réservations</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date de début</th>
-                <th>Date de fin</th>
-                <th>Date de fin prévue</th>
-                <th>Date de fin effective</th>
-                <th>Active</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for reservation in reservations %}
-            <tr>
-                <td>{{ reservation.startDate ? reservation.startDate|date('Y-m-d') : '' }}</td>
-                <td>{{ reservation.endDate ? reservation.endDate|date('Y-m-d') : '' }}</td>
-                <td>{{ reservation.expectedEndDate ? reservation.expectedEndDate|date('Y-m-d') : '' }}</td>
-                <td>{{ reservation.effectiveEndDate ? reservation.effectiveEndDate|date('Y-m-d') : '' }}</td>
-                <td>{{ reservation.active ? 'Oui' : 'Non' }}</td>
-                <td>
-                    <a href="{{ path('app_reservation_show', {'id': reservation.id}) }}">Voir</a>
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <a href="{{ path('app_reservation_edit', {'id': reservation.id}) }}">Modifier</a>
-                    {% endif %}
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7">Aucune réservation trouvée</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="card shadow-sm mb-3">
+        <div class="card-body">
+            <table class="table table-bordered table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th>Date de début</th>
+                        <th>Date de fin</th>
+                        <th>Date de fin prévue</th>
+                        <th>Date de fin effective</th>
+                        <th>Active</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reservation in reservations %}
+                        <tr>
+                            <td>{{ reservation.startDate ? reservation.startDate|date('Y-m-d') : '' }}</td>
+                            <td>{{ reservation.endDate ? reservation.endDate|date('Y-m-d') : '' }}</td>
+                            <td>{{ reservation.expectedEndDate ? reservation.expectedEndDate|date('Y-m-d') : '' }}</td>
+                            <td>{{ reservation.effectiveEndDate ? reservation.effectiveEndDate|date('Y-m-d') : '' }}</td>
+                            <td>
+                                {% if reservation.active %}
+                                    <span class="badge bg-success">Oui</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Non</span>
+                                {% endif %}
+                            </td>
+                            <td class="d-flex gap-2">
+                                <a class="btn btn-info btn-sm" href="{{ path('app_reservation_show', {'id': reservation.id}) }}">Voir</a>
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <a class="btn btn-warning btn-sm" href="{{ path('app_reservation_edit', {'id': reservation.id}) }}">Modifier</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center">Aucune réservation trouvée</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
     {% if is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('app_reservation_new') }}">Ajouter une réservation</a>
+        <a class="btn btn-primary" href="{{ path('app_reservation_new') }}">Ajouter une réservation</a>
     {% endif %}
+</div>
 {% endblock %}
