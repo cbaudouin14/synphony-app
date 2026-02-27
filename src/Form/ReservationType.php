@@ -18,7 +18,6 @@ class ReservationType extends AbstractType
             ->add('endDate')
             ->add('expectedEndDate')
             ->add('effectiveEndDate')
-            ->add('active')
             ->add('book', EntityType::class, [
                 'class' => Book::class,
                 'choice_label' => 'id',

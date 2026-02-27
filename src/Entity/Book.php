@@ -76,19 +76,15 @@ class Book
     {
         $this->stock = $stock;
 
+        // Met à jour la disponibilité automatiquement
+        $this->available = $stock > 0;
+
         return $this;
     }
 
     public function isAvailable(): ?bool
     {
         return $this->available;
-    }
-
-    public function setAvailable(bool $available): static
-    {
-        $this->available = $available;
-
-        return $this;
     }
 
     /**
@@ -104,6 +100,10 @@ class Book
         if (!$this->reservations->contains($reservation)) {
             $this->reservations->add($reservation);
             $reservation->addBook($this);
+
+            if ($this->stock > 0) {
+                $this->setStock($this->stock - 1);
+            }
         }
 
         return $this;
@@ -113,6 +113,8 @@ class Book
     {
         if ($this->reservations->removeElement($reservation)) {
             $reservation->removeBook($this);
+
+            $this->setStock($this->stock + 1);
         }
 
         return $this;

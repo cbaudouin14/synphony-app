@@ -3,44 +3,42 @@
 {% block title %}Book index{% endblock %}
 
 {% block body %}
-    <h1>Book index</h1>
+    <h1>Liste des livres</h1>
 
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Author</th>
+                <th>Titre</th>
+                <th>Auteur</th>
                 <th>Stock</th>
-                <th>Available</th>
-                <th>actions</th>
+                <th>Disponible</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
         {% for book in books %}
             <tr>
-                <td>{{ book.id }}</td>
                 <td>{{ book.title }}</td>
                 <td>{{ book.author }}</td>
                 <td>{{ book.stock }}</td>
-                <td>{{ book.available ? 'Yes' : 'No' }}</td>
+                <td>{{ book.available ? 'Oui' : 'Non' }}</td>
                 <td>
-                    <a href="{{ path('app_book_show', {'id': book.id}) }}">show</a>
+                    <a href="{{ path('app_book_show', {'id': book.id}) }}">Voir</a>
                     {% if is_granted('ROLE_ADMIN') %}
-                        <a href="{{ path('app_book_edit', {'id': book.id}) }}">edit</a>
+                        <a href="{{ path('app_book_edit', {'id': book.id}) }}">Modifier</a>
                     {% endif %}
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="6">no records found</td>
+                <td colspan="6">Aucun livre trouvé</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
     {% if is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('app_book_new') }}">Create new</a>
+        <a href="{{ path('app_book_new') }}">Ajouter un livre</a>
     {% endif %}
 
 {% endblock %}
