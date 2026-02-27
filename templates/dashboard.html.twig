@@ -7,8 +7,8 @@
 
 <p>Accédez rapidement à vos actions :</p>
 <ul>
-    <li><a href="">Voir le catalogue de livres</a></li>
-    <li><a href="">Mes réservations</a></li>
+    <li><a href="{{ path('app_book_index') }}">Voir le catalogue de livres</a></li>
+    <li><a href="{{ path('app_reservation_index') }}">Mes réservations</a></li>
     {% if is_granted('ROLE_ADMIN') %}
         <li><a href="{{ path('app_user_index') }}">Gérer les utilisateurs</a></li>
     {% endif %}
