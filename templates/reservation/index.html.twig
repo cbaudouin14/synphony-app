@@ -26,7 +26,9 @@
                 <td>{{ reservation.active ? 'Oui' : 'Non' }}</td>
                 <td>
                     <a href="{{ path('app_reservation_show', {'id': reservation.id}) }}">Voir</a>
-                    <a href="{{ path('app_reservation_edit', {'id': reservation.id}) }}">Modifier</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('app_reservation_edit', {'id': reservation.id}) }}">Modifier</a>
+                    {% endif %}
                 </td>
             </tr>
         {% else %}
@@ -37,5 +39,7 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_reservation_new') }}">Ajouter une réservation</a>
+    {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('app_reservation_new') }}">Ajouter une réservation</a>
+    {% endif %}
 {% endblock %}
