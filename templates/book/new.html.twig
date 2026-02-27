@@ -3,9 +3,13 @@
 {% block title %}Ajouter un livre{% endblock %}
 
 {% block body %}
-    <h1>Ajouter un livre</h1>
+<div class="container mt-4">
+    <h1 class="mb-4">Ajouter un nouveau livre</h1>
 
-    {{ include('book/_form.html.twig') }}
+    <div class="card p-4 shadow-sm mb-3">
+        {{ include('book/_form.html.twig', {'button_label': 'Ajouter'}) }}
+    </div>
 
-    <a href="{{ path('app_book_index') }}">Retour à la liste</a>
+    <a class="btn btn-secondary" href="{{ path('app_book_index') }}">Retour à la liste</a>
+</div>
 {% endblock %}

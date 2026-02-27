@@ -3,9 +3,13 @@
 {% block title %}Ajouter une réservation{% endblock %}
 
 {% block body %}
-    <h1>Ajouter une réservation</h1>
+<div class="container mt-4">
+    <h1 class="mb-4">Ajouter une réservation</h1>
 
-    {{ include('reservation/_form.html.twig') }}
+    <div class="card p-4 shadow-sm mb-3">
+        {{ include('reservation/_form.html.twig', {'button_label': 'Ajouter'}) }}
+    </div>
 
-    <a href="{{ path('app_reservation_index') }}">Retour à la liste</a>
+    <a class="btn btn-secondary" href="{{ path('app_reservation_index') }}">Retour à la liste</a>
+</div>
 {% endblock %}
