@@ -37,16 +37,13 @@ class Reservation
     #[ORM\ManyToMany(targetEntity: Book::class, inversedBy: 'reservations')]
     private Collection $book;
 
-    /**
-     * @var Collection<int, User>
-     */
-    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'reservation')]
-    private Collection $User;
+    #[ORM\ManyToOne(inversedBy: 'reservations')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     public function __construct()
     {
         $this->book = new ArrayCollection();
-        $this->User = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -62,7 +59,7 @@ class Reservation
     public function setStartDate(\DateTime $startDate): static
     {
         $this->startDate = $startDate;
-
+        $this->updateActiveStatus();
         return $this;
     }
 
@@ -74,7 +71,7 @@ class Reservation
     public function setEndDate(\DateTime $endDate): static
     {
         $this->endDate = $endDate;
-
+        $this->updateActiveStatus();
         return $this;
     }
 
@@ -102,6 +99,19 @@ class Reservation
         return $this;
     }
 
+    public function updateActiveStatus(): static
+    {
+        $now = new \DateTime();
+
+        if ($this->startDate && $this->endDate) {
+            $this->active = ($this->startDate <= $now) && ($this->endDate >= $now);
+        } else {
+            $this->active = false;
+        }
+
+        return $this;
+    }
+
     public function isActive(): ?bool
     {
         return $this->active;
@@ -125,7 +135,17 @@ class Reservation
     public function addBook(Book $book): static
     {
         if (!$this->book->contains($book)) {
-            $this->book->add($book);
+            if ($book->isAvailable()) {
+                $this->book->add($book);
+
+                $book->getReservations()->add($this);
+
+                $book->setStock($book->getStock() - 1);
+
+
+            } else {
+                throw new \Exception("Le livre '{$book->getTitle()}' n'est pas disponible.");
+            }
         }
 
         return $this;
@@ -133,38 +153,51 @@ class Reservation
 
     public function removeBook(Book $book): static
     {
-        $this->book->removeElement($book);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUser(): Collection
-    {
-        return $this->User;
-    }
-
-    public function addUser(User $user): static
-    {
-        if (!$this->User->contains($user)) {
-            $this->User->add($user);
-            $user->setReservation($this);
+        if ($this->book->removeElement($book)) {
+            $book->removeReservation($this);
         }
 
         return $this;
     }
 
-    public function removeUser(User $user): static
+    public function getUser(): ?User
     {
-        if ($this->User->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getReservation() === $this) {
-                $user->setReservation(null);
-            }
-        }
+        return $this->user;
+    }
 
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
         return $this;
     }
+
+    // /**
+    //  * @return Collection<int, User>
+    //  */
+    // public function getUser(): Collection
+    // {
+    //     return $this->User;
+    // }
+
+    // public function addUser(User $user): static
+    // {
+    //     if (!$this->User->contains($user)) {
+    //         $this->User->add($user);
+    //         $user->setReservation($this);
+    //     }
+
+    //     return $this;
+    // }
+
+    // public function removeUser(User $user): static
+    // {
+    //     if ($this->User->removeElement($user)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($user->getReservation() === $this) {
+    //             $user->setReservation(null);
+    //         }
+    //     }
+
+    //     return $this;
+    // }
 }

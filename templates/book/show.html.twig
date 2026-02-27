@@ -3,20 +3,16 @@
 {% block title %}Book{% endblock %}
 
 {% block body %}
-    <h1>Book</h1>
+    <h1>{{ book.title }}</h1>
 
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
-                <td>{{ book.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
+                <th>Titre</th>
                 <td>{{ book.title }}</td>
             </tr>
             <tr>
-                <th>Author</th>
+                <th>Auteur</th>
                 <td>{{ book.author }}</td>
             </tr>
             <tr>
@@ -24,15 +20,17 @@
                 <td>{{ book.stock }}</td>
             </tr>
             <tr>
-                <th>Available</th>
-                <td>{{ book.available ? 'Yes' : 'No' }}</td>
+                <th>Disponible</th>
+                <td>{{ book.available ? 'Oui' : 'Non' }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('app_book_index') }}">back to list</a>
+    <a href="{{ path('app_book_index') }}">Retour à la liste</a>
 
-    <a href="{{ path('app_book_edit', {'id': book.id}) }}">edit</a>
-
-    {{ include('book/_delete_form.html.twig') }}
+    {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('app_book_edit', {'id': book.id}) }}">Modifier</a>
+        {{ include('book/_delete_form.html.twig') }}
+    {% endif %}
+    
 {% endblock %}
