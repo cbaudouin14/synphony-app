@@ -26,7 +26,9 @@
                 <td>{{ book.available ? 'Yes' : 'No' }}</td>
                 <td>
                     <a href="{{ path('app_book_show', {'id': book.id}) }}">show</a>
-                    <a href="{{ path('app_book_edit', {'id': book.id}) }}">edit</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('app_book_edit', {'id': book.id}) }}">edit</a>
+                    {% endif %}
                 </td>
             </tr>
         {% else %}
@@ -37,5 +39,8 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_book_new') }}">Create new</a>
+    {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('app_book_new') }}">Create new</a>
+    {% endif %}
+
 {% endblock %}
