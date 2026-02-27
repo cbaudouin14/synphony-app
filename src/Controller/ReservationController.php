@@ -18,7 +18,7 @@ final class ReservationController extends AbstractController
     public function index(ReservationRepository $reservationRepository): Response
     {
         return $this->render('reservation/index.html.twig', [
-            'reservations' => $reservationRepository->findAll(),
+            'reservations' => $reservationRepository->findActiveReservations(),
         ]);
     }
 
