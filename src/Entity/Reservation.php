@@ -18,7 +18,7 @@ class Reservation
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Assert\NotBlank(message: 'Le champ ne peut pas être vide')]
+    #[Assert\NotNull(message: 'Le champ ne peut pas être vide')]
     #[ORM\Column(type: 'datetime')]
     private DateTimeInterface $startDate;
 
@@ -27,7 +27,7 @@ class Reservation
      * @var string A "Y-m-d H:i:s" formatted value
      */
 
-    #[Assert\NotBlank(message: 'Le champ ne peut pas être vide')]
+    #[Assert\NotNull(message: 'Le champ ne peut pas être vide')]
     #[ORM\Column(type: 'datetime')]
     private DateTimeInterface $endDate;
 
@@ -35,7 +35,7 @@ class Reservation
      * @var string A "Y-m-d H:i:s" formatted value
      */
 
-    #[Assert\NotBlank(message: 'Le champ ne peut pas être vide')]
+    #[Assert\NotNull(message: 'Le champ ne peut pas être vide')]
     #[ORM\Column(type: 'datetime')]
     private DateTimeInterface $expectedEndDate;
 
