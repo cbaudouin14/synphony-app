@@ -15,9 +15,7 @@
 							<th>Id</th>
 							<th>Livre</th>
 							<th>Date de début</th>
-							<th>Date de fin</th>
 							<th>Date de fin prévue</th>
-							<th>Date de fin effective</th>
 							<th>Active</th>
 							<th>Actions</th>
 						</tr>
@@ -36,9 +34,7 @@
 									{% endfor %}
 								</td>
 								<td>{{ reservation.startDate ? reservation.startDate|date('Y-m-d') : '' }}</td>
-								<td>{{ reservation.endDate ? reservation.endDate|date('Y-m-d') : '' }}</td>
 								<td>{{ reservation.expectedEndDate ? reservation.expectedEndDate|date('Y-m-d') : '' }}</td>
-								<td>{{ reservation.effectiveEndDate ? reservation.effectiveEndDate|date('Y-m-d') : '' }}</td>
 								<td>
 									{% if reservation.active %}
 										<span class="badge bg-success">Oui</span>

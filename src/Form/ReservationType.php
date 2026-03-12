@@ -19,22 +19,11 @@ class ReservationType extends AbstractType
             ->add('startDate', DateTimeType::class, [
                 'label'   => 'Date de début',
                 'widget' => 'single_text',
-                'data'   => new \DateTime(),  // Date du jour par défaut
             ])
-            ->add('endDate', DateTimeType::class, [
-                'label'  => 'Date de fin',
-                'widget' => 'single_text',
-                'data'   => new \DateTime('+30 days'),  // ✅ Cohérent avec le constructeur
-            ])
+
             ->add('expectedEndDate', DateTimeType::class, [
                 'label'  => 'Date de retour prévue',
                 'widget' => 'single_text',
-                'data'   => new \DateTime('+30 days'),
-            ])
-            ->add('effectiveEndDate', DateTimeType::class, [
-                'label'  => 'Date de retour effective',
-                'widget' => 'single_text',
-                'data'   => new \DateTime('+30 days'),
             ])
 
             ->add('book', EntityType::class, [

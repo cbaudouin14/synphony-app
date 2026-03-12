@@ -18,33 +18,21 @@ class Reservation
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Assert\NotNull(message: 'Le champ ne peut pas être vide')]
-    #[ORM\Column(type: 'datetime')]
-    private DateTimeInterface $startDate;
-
-    /* ENDDATE = PAS UTILE MAIS JE N'ARRIVE PAS A LE RETIRER SANS TOUT CASSER */
     /**
-     * @var string A "Y-m-d H:i:s" formatted value
+     * @var DateTimeInterface
      */
 
     #[Assert\NotNull(message: 'Le champ ne peut pas être vide')]
     #[ORM\Column(type: 'datetime')]
-    private DateTimeInterface $endDate;
+    private DateTimeInterface $startDate;
 
     /**
-     * @var string A "Y-m-d H:i:s" formatted value
+     * @var DateTimeInterface
      */
 
     #[Assert\NotNull(message: 'Le champ ne peut pas être vide')]
     #[ORM\Column(type: 'datetime')]
     private DateTimeInterface $expectedEndDate;
-
-    /**
-     * @var string A "Y-m-d H:i:s" formatted value
-     */
-
-    #[ORM\Column(type: 'datetime')]
-    private DateTimeInterface $effectiveEndDate;
 
     #[ORM\Column]
     private ?bool $active = null;
@@ -64,9 +52,7 @@ class Reservation
     {
         $this->book = new ArrayCollection();
         $this->startDate = new \DateTime();
-        $this->endDate = new \DateTime('+30 days');
         $this->expectedEndDate = new \DateTime('+30 days');
-        $this->effectiveEndDate = new \DateTime('+30 days');
     }
 
     public function getId(): ?int
@@ -86,18 +72,6 @@ class Reservation
         return $this;
     }
 
-    public function getEndDate(): DateTimeInterface
-    {
-        return $this->endDate;
-    }
-
-    public function setEndDate(DateTimeInterface $endDate): static
-    {
-        $this->endDate = $endDate;
-        $this->updateActiveStatus();
-        return $this;
-    }
-
     public function getExpectedEndDate(): DateTimeInterface
     {
         return $this->expectedEndDate;
@@ -109,23 +83,12 @@ class Reservation
         return $this;
     }
 
-    public function getEffectiveEndDate(): DateTimeInterface
-    {
-        return $this->effectiveEndDate;
-    }
-
-    public function setEffectiveEndDate(DateTimeInterface $effectiveEndDate): static
-    {
-        $this->effectiveEndDate = $effectiveEndDate;
-        return $this;
-    }
-
     public function updateActiveStatus(): static
     {
         $now = new \DateTime();
 
-        if ($this->startDate && $this->endDate) {
-            $this->active = ($this->startDate <= $now) && ($this->endDate >= $now);
+        if ($this->startDate && $this->expectedEndDate) {
+            $this->active = ($this->startDate <= $now) && ($this->expectedEndDate >= $now);
         } else {
             $this->active = false;
         }

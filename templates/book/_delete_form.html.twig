@@ -1,7 +1,6 @@
-<form method="post" action="{{ path('app_book_delete', {'id': user.id}) }}" 
-      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?');">
-    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ book.id) }}">
-    <button type="submit" class="btn btn-danger">
-        Supprimer
-    </button>
+<form method="post" action="{{ path('app_book_delete', {'id': book.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?');">
+	<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ book.id) }}">
+	<button type="submit" class="btn btn-danger">
+		Supprimer
+	</button>
 </form>
