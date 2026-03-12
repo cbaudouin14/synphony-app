@@ -14,14 +14,14 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class RegistrationFormType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function buildForm(FormBuilderInterface $builder, array $options): void // ajouter ici les containtes MDP et mail - le reste sur les entités
     {
         $builder
             ->add('email')
-            ->add('agreeTerms', CheckboxType::class, [
+            ->add('agreeTerms', CheckboxType::class, [ // par défaut - utiliser assert dans l'entité
                 'mapped' => false,
                 'constraints' => [
-                    new IsTrue(
+                    new IsTrue( // ici
                         message: 'You should agree to our terms.',
                     ),
                 ],

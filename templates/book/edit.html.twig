@@ -1,19 +1,21 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier le livre : {{ book.title }}{% endblock %}
+{% block title %}Modifier le livre :
+	{{ book.title }}
+{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-    <h1 class="mb-4">Modifier les informations du livre</h1>
+	<div class="container mt-4">
+		<h1 class="mb-4">Modifier les informations du livre</h1>
 
-    <div class="card p-4 shadow-sm mb-3">
-        {{ include('book/_form.html.twig', {'button_label': 'Modifier'}) }}
-    </div>
+		<div class="card p-4 shadow-sm mb-3">
+			{{ include('book/_form.html.twig', {'button_label': 'Modifier'}) }}
+		</div>
 
-    <div class="d-flex gap-2">
-        <a class="btn btn-secondary" href="{{ path('app_book_index') }}">Retour à la liste</a>
+		<div class="d-flex gap-2">
+			<a class="btn btn-secondary" href="{{ path('app_book_index') }}">Retour à la liste</a>
 
-        {{ include('book/_delete_form.html.twig') }}
-    </div>
-</div>
+			{{ include('book/_delete_form.html.twig') }}
+		</div>
+	</div>
 {% endblock %}
