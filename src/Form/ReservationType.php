@@ -21,11 +21,6 @@ class ReservationType extends AbstractType
                 'widget' => 'single_text',
             ])
 
-            ->add('expectedEndDate', DateTimeType::class, [
-                'label'  => 'Date de retour prévue',
-                'widget' => 'single_text',
-            ])
-
             ->add('book', EntityType::class, [
                 'class' => Book::class,
                 'choice_label' => 'title', // plus logique que id

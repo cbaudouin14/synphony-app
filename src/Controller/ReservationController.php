@@ -31,6 +31,7 @@ final class ReservationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $reservation->setUser($this->getUser());
+            $reservation->setStartDate($reservation->getStartDate());
             $reservation->updateActiveStatus();
             $entityManager->persist($reservation);
             $entityManager->flush();

@@ -68,6 +68,7 @@ class Reservation
     public function setStartDate(DateTimeInterface $startDate): static
     {
         $this->startDate = $startDate;
+        $this->expectedEndDate = \DateTime::createFromInterface($startDate)->modify('+30 days');
         $this->updateActiveStatus();
         return $this;
     }
@@ -88,6 +89,8 @@ class Reservation
         $now = new \DateTime();
 
         if ($this->startDate && $this->expectedEndDate) {
+            $startOfDay = \DateTime::createFromInterface($this->startDate)->setTime(0, 0, 0);
+            $endOfDay = \DateTime::createFromInterface($this->expectedEndDate)->setTime(23, 59, 59);
             $this->active = ($this->startDate <= $now) && ($this->expectedEndDate >= $now);
         } else {
             $this->active = false;
