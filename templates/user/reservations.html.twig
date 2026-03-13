@@ -3,38 +3,71 @@
 {% block title %}Réservations de {{ user.email }}{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-    <h1 class="mb-4">Réservations de {{ user.email }}</h1>
+<div class="container py-5">
 
-    <table class="table table-striped table-hover">
-        <thead class="table-dark">
-            <tr>
-                <th>Date début</th>
-                <th>Date fin</th>
-                <th>Active</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for reservation in reservations %}
-            <tr>
-                <td>{{ reservation.startDate|date('Y-m-d') }}</td>
-                <td>{{ reservation.endDate ? reservation.endDate|date('Y-m-d') : '' }}</td>
-                <td>
-                    {% if reservation.active %}
-                        <span class="badge bg-success">Oui</span>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="fw-bold">📅 Réservations de {{ user.email }}</h1>
+
+        <a class="btn btn-outline-secondary" href="{{ path('app_user_index') }}">
+            ← Retour aux utilisateurs
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-lg rounded-4">
+        <div class="card-body p-4">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead class="border-bottom">
+                        <tr class="text-muted text-uppercase small">
+                            <th>Date début</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                    {% for reservation in reservations %}
+
+                        <tr>
+
+                            <td>{{ reservation.startDate|date('d/m/Y') }}</td>
+
+                        
+                            <td>
+                                {% if reservation.active %}
+                                    <span class="badge rounded-pill bg-success-subtle text-success">
+                                        Active
+                                    </span>
+                                {% else %}
+                                    <span class="badge rounded-pill bg-secondary-subtle text-secondary">
+                                        Terminée
+                                    </span>
+                                {% endif %}
+                            </td>
+
+                        </tr>
+
                     {% else %}
-                        <span class="badge bg-secondary">Non</span>
-                    {% endif %}
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3" class="text-center">Aucune réservation</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
 
-    <a class="btn btn-secondary mt-3" href="{{ path('app_user_index') }}">Retour à la liste</a>
+                        <tr>
+                            <td colspan="3" class="text-center text-muted py-4">
+                                Aucune réservation
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+
 </div>
 {% endblock %}

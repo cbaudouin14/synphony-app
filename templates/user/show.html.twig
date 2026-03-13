@@ -1,43 +1,76 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Utilisateur
-	{{ user.email }}
-{% endblock %}
+{% block title %}Utilisateur {{ user.email }}{% endblock %}
 
 {% block body %}
-	<div class="container mt-4">
-		<h1 class="mb-4">Utilisateur :
-			{{ user.email }}</h1>
+<div class="container py-5">
 
-		<div class="card shadow-sm mb-4">
-			<div class="card-body">
-				<table class="table table-bordered">
-					<tbody>
-						<tr>
-							<th>Id</th>
-							<td>{{ user.id }}</td>
-						</tr>
-						<tr>
-							<th>Email</th>
-							<td>{{ user.email }}</td>
-						</tr>
-						<tr>
-							<th>Roles</th>
-							<td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-						</tr>
-						<tr>
-							<th>Password</th>
-							<td>••••••••</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="fw-bold">👤 Utilisateur : {{ user.email }}</h1>
 
-		<div class="d-flex gap-2">
-			<a class="btn btn-secondary" href="{{ path('app_user_index') }}">Retour à la liste</a>
-			<a class="btn btn-warning" href="{{ path('app_user_edit', {'id': user.id}) }}">Modifier</a>
-			{{ include('user/_delete_form.html.twig') }}
-		</div>
-	</div>
+        <a class="btn btn-outline-secondary" href="{{ path('app_user_index') }}">
+            ← Retour aux utilisateurs
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-lg rounded-4 mb-4">
+        <div class="card-body p-4">
+
+            <table class="table align-middle mb-0">
+                <tbody>
+
+                    <tr>
+                        <th class="text-muted">ID</th>
+                        <td>{{ user.id }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="text-muted">Email</th>
+                        <td class="fw-semibold">{{ user.email }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="text-muted">Rôles</th>
+                        <td>
+                            {% for role in user.roles %}
+                                {% if role == 'ROLE_ADMIN' %}
+                                    <span class="badge bg-danger-subtle text-danger">
+                                        Admin
+                                    </span>
+                                {% elseif role == 'ROLE_USER' %}
+                                    <span class="badge bg-primary-subtle text-primary">
+                                        Utilisateur
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-light text-dark border">
+                                        {{ role }}
+                                    </span>
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th class="text-muted">Mot de passe</th>
+                        <td>••••••••</td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <div class="d-flex gap-2">
+
+        <a class="btn btn-outline-warning"
+           href="{{ path('app_user_edit', {'id': user.id}) }}">
+           Modifier
+        </a>
+
+        {{ include('user/_delete_form.html.twig') }}
+
+    </div>
+
+</div>
 {% endblock %}
