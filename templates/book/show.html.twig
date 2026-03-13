@@ -3,45 +3,76 @@
 {% block title %}Livre : {{ book.title }}{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-    <h1 class="mb-4">{{ book.title }}</h1>
+<div class="container py-5">
 
-    <div class="card p-4 shadow-sm mb-3">
-        <table class="table table-bordered">
-            <tbody>
-                <tr>
-                    <th>Titre</th>
-                    <td>{{ book.title }}</td>
-                </tr>
-                <tr>
-                    <th>Auteur</th>
-                    <td>{{ book.author }}</td>
-                </tr>
-                <tr>
-                    <th>Stock</th>
-                    <td>{{ book.stock }}</td>
-                </tr>
-                <tr>
-                    <th>Disponible</th>
-                    <td>
-                        {% if book.available %}
-                            <span class="badge bg-success">Oui</span>
-                        {% else %}
-                            <span class="badge bg-secondary">Non</span>
-                        {% endif %}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="fw-bold">{{ book.title }}</h1>
+
+        <a class="btn btn-outline-secondary" href="{{ path('app_book_index') }}">
+            ← Retour au catalogue
+        </a>
     </div>
 
-    <div class="d-flex gap-2">
-        <a class="btn btn-secondary" href="{{ path('app_book_index') }}">Retour à la liste</a>
+    <div class="card border-0 shadow-lg rounded-4 mb-4">
+        <div class="card-body p-4">
 
-        {% if is_granted('ROLE_ADMIN') %}
-            <a class="btn btn-warning" href="{{ path('app_book_edit', {'id': book.id}) }}">Modifier</a>
+            <table class="table align-middle mb-0">
+
+                <tbody>
+
+                    <tr>
+                        <th class="text-muted">Titre</th>
+                        <td class="fw-semibold">{{ book.title }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="text-muted">Auteur</th>
+                        <td>{{ book.author }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="text-muted">Stock</th>
+                        <td>
+                            <span class="badge bg-light text-dark border">
+                                {{ book.stock }}
+                            </span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th class="text-muted">Disponibilité</th>
+                        <td>
+                            {% if book.available %}
+                                <span class="badge rounded-pill bg-success-subtle text-success">
+                                    Disponible
+                                </span>
+                            {% else %}
+                                <span class="badge rounded-pill bg-danger-subtle text-danger">
+                                    Indisponible
+                                </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="d-flex gap-2">
+
+            <a class="btn btn-outline-warning"
+               href="{{ path('app_book_edit', {'id': book.id}) }}">
+               Modifier
+            </a>
+
             {{ include('book/_delete_form.html.twig') }}
-        {% endif %}
-    </div>
+
+        </div>
+    {% endif %}
+
 </div>
 {% endblock %}
