@@ -14,6 +14,7 @@ class SecurityController extends AbstractController
     {
         // Redirection si déjà connecté
         if ($this->getUser()) {
+            $this->addFlash('success', 'Opération réussie!');
             return $this->redirectToRoute('app_home'); // route du dashboard
         }
 

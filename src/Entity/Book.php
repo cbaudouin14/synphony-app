@@ -25,7 +25,7 @@ class Book
     private ?string $author = null;
 
     #[ORM\Column]
-    #[Assert\Positive(message: 'La valeur doit être supérieure ou égal à 1')]
+    #[Assert\PositiveOrZero(message: 'La valeur doit être supérieure ou égal à 0')]
     #[Assert\NotBlank(message: 'Le champ ne peut pas être vide')]
     private ?int $stock = null;
 
@@ -77,13 +77,10 @@ class Book
         return $this->stock;
     }
 
-    public function setStock(int $stock): static
+    public function setStock(?int $stock): static
     {
-        $this->stock = $stock;
-
-        // Met à jour la disponibilité automatiquement
-        $this->available = $stock > 0;
-
+        $this->stock = $stock ?? 0;
+        $this->available = ($this->stock > 0);
         return $this;
     }
 

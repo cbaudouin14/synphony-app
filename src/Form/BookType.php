@@ -6,6 +6,7 @@ use App\Entity\Book;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
 class BookType extends AbstractType
 {
@@ -14,8 +15,10 @@ class BookType extends AbstractType
         $builder
             ->add('title')
             ->add('author')
-            ->add('stock')
-        ;
+            ->add('stock', IntegerType::class, [
+                'data' => 0,        // valeur par défaut affichée dans le champ
+                'attr' => ['min' => 0],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void // ici options suppl'
