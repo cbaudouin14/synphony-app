@@ -23,7 +23,6 @@
                     <thead class="border-bottom">
                         <tr class="text-muted text-uppercase small">
                             <th>Date début</th>
-                            <th>Date fin</th>
                             <th>Statut</th>
                         </tr>
                     </thead>
@@ -36,10 +35,7 @@
 
                             <td>{{ reservation.startDate|date('d/m/Y') }}</td>
 
-                            <td>
-                                {{ reservation.endDate ? reservation.endDate|date('d/m/Y') : '-' }}
-                            </td>
-
+                        
                             <td>
                                 {% if reservation.active %}
                                     <span class="badge rounded-pill bg-success-subtle text-success">
