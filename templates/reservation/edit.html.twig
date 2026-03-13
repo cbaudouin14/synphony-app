@@ -1,13 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier Réservation{% endblock %}
+{% block title %}Modifier la réservation{% endblock %}
 
 {% block body %}
-    <h1>Modifier Réservation</h1>
+<div class="container mt-4">
+    <h1 class="mb-4">Modifier la réservation n°{{ reservation.id }}</h1>
 
-    {{ include('reservation/_form.html.twig', {'button_label': 'Modifier'}) }}
+    <div class="card p-4 shadow-sm mb-3">
+        {{ include('reservation/_form.html.twig', {'button_label': 'Modifier'}) }}
+    </div>
 
-    <a href="{{ path('app_reservation_index') }}">Retour à la liste</a>
-
-    {{ include('reservation/_delete_form.html.twig') }}
+    <div class="d-flex gap-2">
+        <a class="btn btn-secondary" href="{{ path('app_reservation_index') }}">Retour à la liste</a>
+        {{ include('reservation/_delete_form.html.twig') }}
+    </div>
+</div>
 {% endblock %}

@@ -85,4 +85,13 @@ final class UserController extends AbstractController
 
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/{id}/reservations', name: 'app_user_reservations')]
+    public function reservations(User $user): Response
+    {
+        return $this->render('user/reservations.html.twig', [
+            'user' => $user,
+            'reservations' => $user->getReservations(),
+        ]);
+    }
 }

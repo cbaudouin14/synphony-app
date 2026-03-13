@@ -6,6 +6,7 @@ use App\Repository\BookRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 class Book
@@ -16,12 +17,16 @@ class Book
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Le champ ne peut pas être vide')]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Le champ ne peut pas être vide')]
     private ?string $author = null;
 
     #[ORM\Column]
+    #[Assert\Positive(message: 'La valeur doit être supérieure ou égal à 1')]
+    #[Assert\NotBlank(message: 'Le champ ne peut pas être vide')]
     private ?int $stock = null;
 
     #[ORM\Column]
@@ -99,11 +104,6 @@ class Book
     {
         if (!$this->reservations->contains($reservation)) {
             $this->reservations->add($reservation);
-            $reservation->addBook($this);
-
-            if ($this->stock > 0) {
-                $this->setStock($this->stock - 1);
-            }
         }
 
         return $this;

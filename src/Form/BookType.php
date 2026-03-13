@@ -18,10 +18,11 @@ class BookType extends AbstractType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver): void
+    public function configureOptions(OptionsResolver $resolver): void // ici options suppl'
     {
         $resolver->setDefaults([
             'data_class' => Book::class,
+            'required' => false
         ]);
     }
 }

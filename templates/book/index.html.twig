@@ -1,44 +1,55 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Book index{% endblock %}
+{% block title %}Catalogue des livres{% endblock %}
 
 {% block body %}
-    <h1>Liste des livres</h1>
+<div class="container mt-4">
+    <h1 class="mb-4">Catalogue des livres</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Titre</th>
-                <th>Auteur</th>
-                <th>Stock</th>
-                <th>Disponible</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for book in books %}
-            <tr>
-                <td>{{ book.title }}</td>
-                <td>{{ book.author }}</td>
-                <td>{{ book.stock }}</td>
-                <td>{{ book.available ? 'Oui' : 'Non' }}</td>
-                <td>
-                    <a href="{{ path('app_book_show', {'id': book.id}) }}">Voir</a>
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <a href="{{ path('app_book_edit', {'id': book.id}) }}">Modifier</a>
-                    {% endif %}
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">Aucun livre trouvé</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="card shadow-sm mb-3">
+        <div class="card-body">
+            <table class="table table-bordered table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th>Titre</th>
+                        <th>Auteur</th>
+                        <th>Stock</th>
+                        <th>Disponible</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in books %}
+                        <tr>
+                            <td>{{ book.title }}</td>
+                            <td>{{ book.author }}</td>
+                            <td>{{ book.stock }}</td>
+                            <td>
+                                {% if book.available %}
+                                    <span class="badge bg-success">Oui</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Non</span>
+                                {% endif %}
+                            </td>
+                            <td class="d-flex gap-2">
+                                <a class="btn btn-info btn-sm" href="{{ path('app_book_show', {'id': book.id}) }}">Voir</a>
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <a class="btn btn-warning btn-sm" href="{{ path('app_book_edit', {'id': book.id}) }}">Modifier</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center">Aucun livre trouvé</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
     {% if is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('app_book_new') }}">Ajouter un livre</a>
+        <a class="btn btn-primary" href="{{ path('app_book_new') }}">Ajouter un livre</a>
     {% endif %}
-
+</div>
 {% endblock %}

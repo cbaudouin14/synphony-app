@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use DateTimeInterface;
 
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
 class Reservation
@@ -16,17 +18,21 @@ class Reservation
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTime $startDate = null;
+    /**
+     * @var DateTimeInterface
+     */
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTime $endDate = null;
+    #[Assert\NotNull(message: 'Le champ ne peut pas être vide')]
+    #[ORM\Column(type: 'datetime')]
+    private DateTimeInterface $startDate;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTime $expectedEndDate = null;
+    /**
+     * @var DateTimeInterface
+     */
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTime $effectiveEndDate = null;
+    #[Assert\NotNull(message: 'Le champ ne peut pas être vide')]
+    #[ORM\Column(type: 'datetime')]
+    private DateTimeInterface $expectedEndDate;
 
     #[ORM\Column]
     private ?bool $active = null;
@@ -35,18 +41,18 @@ class Reservation
      * @var Collection<int, Book>
      */
     #[ORM\ManyToMany(targetEntity: Book::class, inversedBy: 'reservations')]
+    #[Assert\Count(min: 1, minMessage: 'Sélectionner au moins un livre')]
     private Collection $book;
 
-    /**
-     * @var Collection<int, User>
-     */
-    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'reservation')]
-    private Collection $User;
+    #[ORM\ManyToOne(inversedBy: 'reservations')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     public function __construct()
     {
         $this->book = new ArrayCollection();
-        $this->User = new ArrayCollection();
+        $this->startDate = new \DateTime();
+        $this->expectedEndDate = new \DateTime('+30 days');
     }
 
     public function getId(): ?int
@@ -54,51 +60,27 @@ class Reservation
         return $this->id;
     }
 
-    public function getStartDate(): ?\DateTime
+    public function getStartDate(): DateTimeInterface
     {
         return $this->startDate;
     }
 
-    public function setStartDate(\DateTime $startDate): static
+    public function setStartDate(DateTimeInterface $startDate): static
     {
         $this->startDate = $startDate;
+        $this->expectedEndDate = \DateTime::createFromInterface($startDate)->modify('+30 days');
         $this->updateActiveStatus();
         return $this;
     }
 
-    public function getEndDate(): ?\DateTime
-    {
-        return $this->endDate;
-    }
-
-    public function setEndDate(\DateTime $endDate): static
-    {
-        $this->endDate = $endDate;
-        $this->updateActiveStatus();
-        return $this;
-    }
-
-    public function getExpectedEndDate(): ?\DateTime
+    public function getExpectedEndDate(): DateTimeInterface
     {
         return $this->expectedEndDate;
     }
 
-    public function setExpectedEndDate(\DateTime $expectedEndDate): static
+    public function setExpectedEndDate(DateTimeInterface $expectedEndDate): static
     {
         $this->expectedEndDate = $expectedEndDate;
-
-        return $this;
-    }
-
-    public function getEffectiveEndDate(): ?\DateTime
-    {
-        return $this->effectiveEndDate;
-    }
-
-    public function setEffectiveEndDate(\DateTime $effectiveEndDate): static
-    {
-        $this->effectiveEndDate = $effectiveEndDate;
-
         return $this;
     }
 
@@ -106,8 +88,10 @@ class Reservation
     {
         $now = new \DateTime();
 
-        if ($this->startDate && $this->endDate) {
-            $this->active = ($this->startDate <= $now) && ($this->endDate >= $now);
+        if ($this->startDate && $this->expectedEndDate) {
+            $startOfDay = \DateTime::createFromInterface($this->startDate)->setTime(0, 0, 0);
+            $endOfDay = \DateTime::createFromInterface($this->expectedEndDate)->setTime(23, 59, 59);
+            $this->active = ($this->startDate <= $now) && ($this->expectedEndDate >= $now);
         } else {
             $this->active = false;
         }
@@ -140,7 +124,10 @@ class Reservation
         if (!$this->book->contains($book)) {
             if ($book->isAvailable()) {
                 $this->book->add($book);
-                $book->addReservation($this);
+
+                $book->getReservations()->add($this);
+
+                $book->setStock($book->getStock() - 1);
             } else {
                 throw new \Exception("Le livre '{$book->getTitle()}' n'est pas disponible.");
             }
@@ -158,33 +145,44 @@ class Reservation
         return $this;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUser(): Collection
+    public function getUser(): ?User
     {
-        return $this->User;
+        return $this->user;
     }
 
-    public function addUser(User $user): static
+    public function setUser(?User $user): static
     {
-        if (!$this->User->contains($user)) {
-            $this->User->add($user);
-            $user->setReservation($this);
-        }
-
+        $this->user = $user;
         return $this;
     }
 
-    public function removeUser(User $user): static
-    {
-        if ($this->User->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getReservation() === $this) {
-                $user->setReservation(null);
-            }
-        }
+    // /**
+    //  * @return Collection<int, User>
+    //  */
+    // public function getUser(): Collection
+    // {
+    //     return $this->User;
+    // }
 
-        return $this;
-    }
+    // public function addUser(User $user): static
+    // {
+    //     if (!$this->User->contains($user)) {
+    //         $this->User->add($user);
+    //         $user->setReservation($this);
+    //     }
+
+    //     return $this;
+    // }
+
+    // public function removeUser(User $user): static
+    // {
+    //     if ($this->User->removeElement($user)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($user->getReservation() === $this) {
+    //             $user->setReservation(null);
+    //         }
+    //     }
+
+    //     return $this;
+    // }
 }
