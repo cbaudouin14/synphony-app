@@ -17,7 +17,7 @@ class HomeController extends AbstractController
                 // Tu peux passer des variables si besoin
             ]);
         }
-
+        $this->addFlash('success', 'Opération réussie!');
         return $this->redirectToRoute('app_login');
     }
 }

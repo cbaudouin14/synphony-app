@@ -23,6 +23,7 @@ class Reservation
      */
 
     #[Assert\NotNull(message: 'Le champ ne peut pas être vide')]
+    #[Assert\LessThanOrEqual('today', message: 'La date de début ne peut pas être dans le futur')]
     #[ORM\Column(type: 'datetime')]
     private DateTimeInterface $startDate;
 

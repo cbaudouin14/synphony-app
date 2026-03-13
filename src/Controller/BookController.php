@@ -31,11 +31,18 @@ final class BookController extends AbstractController
         $form = $this->createForm(BookType::class, $book);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($book);
-            $entityManager->flush();
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $entityManager->persist($book);
+                $entityManager->flush();
+                $this->addFlash('success', 'Opération réussie!');
+                return $this->redirectToRoute('app_book_index', [], Response::HTTP_SEE_OTHER);
+            }
 
-            return $this->redirectToRoute('app_book_index', [], Response::HTTP_SEE_OTHER);
+            // Récupération des erreurs du formulaire
+            foreach ($form->getErrors(true) as $error) {
+                $this->addFlash('error', $error->getMessage());
+            }
         }
 
         return $this->render('book/new.html.twig', [
@@ -59,10 +66,17 @@ final class BookController extends AbstractController
         $form = $this->createForm(BookType::class, $book);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $entityManager->flush();
+                $this->addFlash('success', 'Opération réussie!');
+                return $this->redirectToRoute('app_book_index', [], Response::HTTP_SEE_OTHER);
+            }
 
-            return $this->redirectToRoute('app_book_index', [], Response::HTTP_SEE_OTHER);
+            // Récupération des erreurs du formulaire
+            foreach ($form->getErrors(true) as $error) {
+                $this->addFlash('error', $error->getMessage());
+            }
         }
 
         return $this->render('book/edit.html.twig', [
@@ -74,11 +88,11 @@ final class BookController extends AbstractController
     #[Route('/{id}', name: 'app_book_delete', methods: ['POST'])]
     public function delete(Request $request, Book $book, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$book->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $book->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($book);
             $entityManager->flush();
         }
-
+        $this->addFlash('success', 'Opération réussie!');
         return $this->redirectToRoute('app_book_index', [], Response::HTTP_SEE_OTHER);
     }
 }

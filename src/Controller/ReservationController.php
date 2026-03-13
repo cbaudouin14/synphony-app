@@ -29,14 +29,22 @@ final class ReservationController extends AbstractController
         $form = $this->createForm(ReservationType::class, $reservation);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $reservation->setUser($this->getUser());
-            $reservation->setStartDate($reservation->getStartDate());
-            $reservation->updateActiveStatus();
-            $entityManager->persist($reservation);
-            $entityManager->flush();
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $reservation->setUser($this->getUser());
+                $reservation->setStartDate($reservation->getStartDate());
+                $reservation->updateActiveStatus();
+                $entityManager->persist($reservation);
+                $entityManager->flush();
 
-            return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
+                $this->addFlash('success', 'Opération réussie!');
+                return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
+            }
+
+            // Récupération des erreurs du formulaire
+            foreach ($form->getErrors(true) as $error) {
+                $this->addFlash('error', $error->getMessage());
+            }
         }
 
         return $this->render('reservation/new.html.twig', [
@@ -44,6 +52,7 @@ final class ReservationController extends AbstractController
             'form' => $form,
         ]);
     }
+
 
     #[Route('/{id}', name: 'app_reservation_show', methods: ['GET'])]
     public function show(Reservation $reservation): Response
@@ -59,10 +68,16 @@ final class ReservationController extends AbstractController
         $form = $this->createForm(ReservationType::class, $reservation);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $entityManager->flush();
+                $this->addFlash('success', 'Opération réussie!');
+                return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
+            }
+            // Récupération des erreurs du formulaire
+            foreach ($form->getErrors(true) as $error) {
+                $this->addFlash('error', $error->getMessage());
+            }
         }
 
         return $this->render('reservation/edit.html.twig', [
@@ -79,6 +94,7 @@ final class ReservationController extends AbstractController
             $entityManager->flush();
         }
 
+        $this->addFlash('success', 'Opération réussie!');
         return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
     }
 }
