@@ -17,20 +17,33 @@ class Book
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: 'Le champ ne peut pas être vide')]
+    #[Assert\NotBlank]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: 'Le champ ne peut pas être vide')]
+    #[Assert\NotBlank]
     private ?string $author = null;
 
     #[ORM\Column]
     #[Assert\PositiveOrZero(message: 'La valeur doit être supérieure ou égal à 0')]
-    #[Assert\NotBlank(message: 'Le champ ne peut pas être vide')]
+    #[Assert\NotBlank]
     private ?int $stock = null;
 
     #[ORM\Column]
     private ?bool $available = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $photo = null;
+
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
+    }
+    public function setPhoto(?string $photo): static
+    {
+        $this->photo = $photo;
+        return $this;
+    }
 
     /**
      * @var Collection<int, Reservation>

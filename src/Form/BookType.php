@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class BookType extends AbstractType
 {
@@ -16,8 +17,12 @@ class BookType extends AbstractType
             ->add('title')
             ->add('author')
             ->add('stock', IntegerType::class, [
-                'data' => 0,        // valeur par défaut affichée dans le champ
-                'attr' => ['min' => 0],
+                'attr' => ['min' => 0]
+            ])
+            ->add('photo', FileType::class, [
+                'label' => 'Photo du livre',
+                'mapped' => false,  // ne mappe pas directement sur l'entité
+                'required' => false,
             ]);
     }
 
