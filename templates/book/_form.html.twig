@@ -1,9 +1,25 @@
 {{ form_start(form) }}
-    <div class="mb-3">
-        {{ form_widget(form) }}
-    </div>
+<div class="mb-3">
+	{{ form_label(form.title) }}
+	{{ form_widget(form.title) }}
 
-    <button type="submit" class="btn btn-primary">
-        {{ button_label|default('Enregistrer') }}
-    </button>
+	{{ form_label(form.author) }}
+	{{ form_widget(form.author) }}
+
+	{{ form_label(form.stock) }}
+	{{ form_widget(form.stock) }}
+
+	{% if book.photo %}
+		<div class="mb-2">
+			<img src="{{ asset('uploads/photos/' ~ book.photo) }}" alt="{{ book.title }}" class="img-fluid rounded" style="max-height: 150px;">
+			<p class="text-muted small mt-1">Laisser vide pour conserver cette photo</p>
+		</div>
+	{% endif %}
+
+	{{ form_row(form.photo) }}
+</div>
+
+<button type="submit" class="btn btn-primary">
+	{{ button_label|default('Enregistrer') }}
+</button>
 {{ form_end(form) }}

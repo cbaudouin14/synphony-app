@@ -1,9 +1,13 @@
 {{ form_start(form) }}
-    <div class="mb-3">
-        {{ form_widget(form) }}
-    </div>
+<div class="mb-3">
+	{{ form_label(form.startDate) }}
+	{{ form_widget(form.startDate) }}
 
-    <button type="submit" class="btn btn-primary">
-        {{ button_label|default('Enregistrer') }}
-    </button>
+	{{ form_label(form.book) }}
+	{{ form_widget(form.book) }}
+</div>
+
+<button type="submit" class="btn btn-primary">
+	{{ button_label|default('Enregistrer') }}
+</button>
 {{ form_end(form) }}

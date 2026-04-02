@@ -33,15 +33,26 @@ final class BookController extends AbstractController
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
+                /** @var UploadedFile|null $photoFile */
+                $photoFile = $form->get('photo')->getData();
+
+                if ($photoFile) {
+                    $newFilename = uniqid() . '.' . $photoFile->guessExtension();
+                    $photoFile->move(
+                        $this->getParameter('photos_directory'),
+                        $newFilename
+                    );
+                    $book->setPhoto($newFilename);
+                }
+
                 $entityManager->persist($book);
                 $entityManager->flush();
                 $this->addFlash('success', 'Opération réussie!');
                 return $this->redirectToRoute('app_book_index', [], Response::HTTP_SEE_OTHER);
             }
-
-            // Récupération des erreurs du formulaire
             foreach ($form->getErrors(true) as $error) {
-                $this->addFlash('error', $error->getMessage());
+                $fieldName = $error->getOrigin()->getName();
+                $this->addFlash('error', $fieldName . ' : ' . $error->getMessage());
             }
         }
 
@@ -68,14 +79,26 @@ final class BookController extends AbstractController
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
+                /** @var UploadedFile|null $photoFile */
+                $photoFile = $form->get('photo')->getData();
+
+                if ($photoFile) {
+                    $newFilename = uniqid() . '.' . $photoFile->guessExtension();
+                    $photoFile->move(
+                        $this->getParameter('photos_directory'),
+                        $newFilename
+                    );
+                    $book->setPhoto($newFilename);
+                }
+
                 $entityManager->flush();
                 $this->addFlash('success', 'Opération réussie!');
                 return $this->redirectToRoute('app_book_index', [], Response::HTTP_SEE_OTHER);
             }
 
-            // Récupération des erreurs du formulaire
             foreach ($form->getErrors(true) as $error) {
-                $this->addFlash('error', $error->getMessage());
+                $fieldName = $error->getOrigin()->getName();
+                $this->addFlash('error', $fieldName . ' : ' . $error->getMessage());
             }
         }
 
@@ -88,14 +111,14 @@ final class BookController extends AbstractController
     #[Route('/{id}', name: 'app_book_delete', methods: ['POST'])]
     public function delete(Request $request, Book $book, EntityManagerInterface $entityManager): Response
     {
-         $activeReservations = $book->getReservations()->filter(fn($reservation) => $reservation->isActive());
+        $activeReservations = $book->getReservations()->filter(fn($reservation) => $reservation->isActive());
 
         if (!$activeReservations->isEmpty()) {
             $this->addFlash('error', 'Impossible de supprimer ce livre : il est lié à une réservation active.');
             return $this->redirectToRoute('app_book_index');
         }
 
-        if ($this->isCsrfTokenValid('delete'.$book->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $book->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($book);
             $entityManager->flush();
         }

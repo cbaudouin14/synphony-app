@@ -17,14 +17,13 @@ class ReservationType extends AbstractType
     {
         $builder
             ->add('startDate', DateTimeType::class, [
-                'label'   => 'Date de début',
+                'label'  => 'Date de début',
                 'widget' => 'single_text',
             ])
-
             ->add('book', EntityType::class, [
-                'class' => Book::class,
-                'choice_label' => 'title', // plus logique que id
-                'multiple' => true,
+                'class'        => Book::class,
+                'choice_label' => 'title',
+                'multiple'     => true,
                 'by_reference' => false,
                 'query_builder' => function (BookRepository $br) {
                     return $br->createQueryBuilder('b')
@@ -39,7 +38,7 @@ class ReservationType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Reservation::class,
-            'required' => false
+            'required'   => false,
         ]);
     }
 }
